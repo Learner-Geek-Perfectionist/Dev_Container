@@ -13,3 +13,5 @@ Before you begin, ensure you have the following installed on your system:
 Setup
 
 The environment is containerized using Docker to ensure consistency regardless of the host operating system. Below are the steps to set up and use the Docker container for C++ development.
+
+Building the Docker Image
