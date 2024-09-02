@@ -1,20 +1,4 @@
-// #include <iostream>
-// using namespace std;
-
-// void test_func(void)
-// {
-//     int a[6] = {0};
-//     int b = a[6]; // 栈缓冲区溢出
-// }
-
-// int main(int argc, char** argv)
-// {
-//     cout <<1231231231<<endl;
-//     test_func();
-//     return 0;
-// }
 #include <iostream>
-#include <ostream>
 
 class Base
 {
@@ -24,7 +8,7 @@ public:
     }
 
     // 析构函数
-    ~Base()
+    virtual ~Base()
     {
         std::cout << "Base destructor called" << std::endl;
     }
