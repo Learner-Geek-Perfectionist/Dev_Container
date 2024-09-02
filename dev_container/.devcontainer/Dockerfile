@@ -13,4 +13,4 @@ RUN echo $TZ > /etc/timezone && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime
 RUN dnf update -y
 
 # 安装软件包，适用于 Fedora 系统
-RUN dnf install -y gdb @'C Development Tools and Libraries' cmake git openssh-server gdb pkg-config valgrind systemd
+RUN dnf install -y gdb @'C Development Tools and Libraries' cmake git openssh-server gdb pkg-config valgrind systemd iproute
