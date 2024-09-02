@@ -1,5 +1,29 @@
 # Container Development Environment
 
+## Directory Structure
+Below is the directory structure of the repository, providing a clear view of the components and their organization:
+
+Dev_Container
+├── README.md
+├── cmake-build-debug
+│   ├── CMakeCache.txt
+│   ├── CMakeFiles
+│   ├── Makefile
+│   ├── Testing
+│   ├── build.ninja
+│   ├── cmake_install.cmake
+│   ├── test
+│   └── test.cbp
+├── docker_build_script
+│   ├── Dockerfile
+│   ├── build.sh
+│   └── run.sh
+├── project
+│   ├── CMakeLists.txt
+│   ├── cmake-build-debug
+│   └── src
+└── valgrind_output.log
+
 ## Introduction
 This repository offers a flexible Linux-based development environment within Docker containers. Our setup utilizes Fedora as the base image, providing robust support for various development needs.
 
