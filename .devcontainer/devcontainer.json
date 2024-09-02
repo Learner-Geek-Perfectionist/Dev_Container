@@ -12,6 +12,6 @@
   ],
   "mounts": [
     // 设置映射目录，consistent 表示容器和主机之间的文件系统完全一致
-    "source=../project/,target=/project,type=bind,consistency=consistent"
+    "source=/Users/ouyangzhaoxin/Downloads/Docker-for-debug/project,target=/project,type=bind,consistency=consistent"
   ]
 }
