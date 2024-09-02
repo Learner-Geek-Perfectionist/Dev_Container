@@ -8,7 +8,7 @@ public:
     }
 
     // 析构函数
-    virtual ~Base()
+    ~Base()
     {
         std::cout << "Base destructor called" << std::endl;
     }
@@ -33,8 +33,6 @@ public:
 
 int main()
 {
-    Base* ptr = new Derived();//未定义行为！
+    Base* ptr = new Derived(); //未定义行为！
     delete ptr;
 }
-
- 
