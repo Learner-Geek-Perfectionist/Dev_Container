@@ -1,17 +1,22 @@
-## C++ Debug Environment
+# Container Development Environment
 
-This repository provides a development and debugging environment for C++ projects using CMake and Docker on a Fedora Linux system. It is designed to simplify the setup process and ensure a consistent development environment across different machines.
+## Introduction
+This repository offers a flexible Linux-based development environment within Docker containers. Our setup utilizes Fedora as the base image, providing robust support for various development needs.
 
-### Prerequisites
+## Setup Options
+You have two primary methods to configure your development environment:
 
-Before you begin, ensure you have the following installed on your system:
+- **Manual Construction**: Use scripts in the `docker_build_script` directory to manually build your Docker containers.
+- **JetBrains Gateway Integration**: For a seamless development experience, use JetBrains Gateway to manage development containers located in the `.devcontainer` directory.
 
-	•	Docker
-	•	CMake
-	•	An IDE or text editor that supports C++ (optional, for ease of editing and managing the project files)
+## Memory Leak Testing
+The `project` directory contains a CMake project tailored for conducting memory leak tests in Linux environments using Valgrind. This is essential for developers aiming to optimize their applications and ensure they are free from memory leaks.
 
-### Setup
+## Configuration Details
+Please adjust the `source` path in the `mounts` keyword within the `devcontainer.json` file found in the `.devcontainer` directory. This change is crucial for correctly mapping your development environment to your local system.
 
-The environment is containerized using Docker to ensure consistency regardless of the host operating system. Below are the steps to set up and use the Docker container for C++ development.
+## Getting Started
+To begin with the manual Docker setup, navigate to the `docker_build_script` directory and follow the provided scripts to build your environment. If opting for JetBrains Gateway, ensure your `devcontainer.json` is properly configured before starting your development sessions.
 
-### Building the Docker Image
+## Contributing
+Contributions to improve the development environment are welcomed. Please feel free to fork the repository, make your changes, and submit a pull request. For bugs or suggestions, open an issue in the GitHub repository.
