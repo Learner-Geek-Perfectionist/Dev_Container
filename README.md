@@ -15,7 +15,6 @@ Dev_Container
 │   └── run.sh
 └── project
     ├── CMakeLists.txt
-    ├── cmake-build-debug
     └── src
 ```
 
