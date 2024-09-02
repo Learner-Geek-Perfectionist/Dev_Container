@@ -3,16 +3,19 @@
 ## Directory Structure
 Below is the directory structure of the repository, providing a clear view of the components and their organization:
 
+``` markdown
 Dev_Container
 ├── README.md
 ├── cmake-build-debug
 │   ├── CMakeCache.txt
 │   ├── CMakeFiles
-│   ├── Makefile
-│   ├── Testing
-│   ├── build.ninja
+│   │   ├── Makefile
+│   │   ├── Testing
+│   │   └── build.ninja
 │   ├── cmake_install.cmake
 │   ├── test
+│   │   ├── test.cbp
+│   │   └── test.exe
 │   └── test.cbp
 ├── docker_build_script
 │   ├── Dockerfile
@@ -21,8 +24,10 @@ Dev_Container
 ├── project
 │   ├── CMakeLists.txt
 │   ├── cmake-build-debug
+│   │   └── src
 │   └── src
 └── valgrind_output.log
+```
 
 
 ## Introduction
