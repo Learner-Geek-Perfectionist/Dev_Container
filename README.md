@@ -6,13 +6,13 @@ Below is the directory structure of the repository, providing a clear view of th
 ``` markdown
 Dev_Container
 ├── .devcontainer
-│   ├── Dockerfile
-│   └── devcontainer.json
+│   ├── Dockerfile
+│   └── devcontainer.json
 ├── README.md
 ├── docker_build_script
-│   ├── Dockerfile
-│   ├── build.sh
-│   └── run.sh
+│   ├── Dockerfile
+│   ├── build.sh
+│   └── run.sh
 └── project
     ├── CMakeLists.txt
     └── src
