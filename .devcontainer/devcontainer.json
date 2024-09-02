@@ -1,7 +1,17 @@
 {
+  // 设置镜像的名称
   "name": "fedora",
   "build": {
     "dockerfile": "./Dockerfile"
   },
-  "containerUser": "root"
+  "containerUser": "root",
+  // 设置容器的名称
+  "runArgs": [
+    "--name",
+    "fedora_test"
+  ],
+  "mounts": [
+    // 设置映射目录，consistent 表示容器和主机之间的文件系统完全一致
+    "source=../project/,target=/project,type=bind,consistency=consistent"
+  ]
 }
