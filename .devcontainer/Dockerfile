@@ -9,14 +9,19 @@ LABEL key="1.0"
 ENV TZ=Asia/Shanghai
 RUN echo $TZ > /etc/timezone && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime
 
-# 使用阿里云的 dnf 源
-RUN curl -o /etc/yum.repos.d/fedora.repo https://mirrors.aliyun.com/repo/fedora.repo && \
-    curl -o /etc/yum.repos.d/fedora-updates.repo https://mirrors.aliyun.com/repo/fedora-updates.repo && \
-    curl -o /etc/yum.repos.d/fedora-modular.repo https://mirrors.aliyun.com/repo/fedora-modular.repo
 
-
-# 更新系统
-RUN dnf update -y
 
 # 安装软件包，适用于 Fedora 系统
-RUN dnf install -y gdb @'C Development Tools and Libraries' cmake git openssh-server gdb pkg-config valgrind systemd iproute
+RUN dnf install -y gdb @'C Development Tools and Libraries' cmake git openssh-server gdb pkg-config valgrind systemd iproute net-tools
+
+# 设置root密码为 1
+RUN echo 'root:1' | chpasswd
+
+# 配置SSH允许root登录
+RUN sed -i 's/#PermitRootLogin yes/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+# 生成SSH密钥
+RUN ssh-keygen -A
+
+# 设置容器启动时运行SSH服务
+CMD ["/usr/sbin/sshd", "-D"]
