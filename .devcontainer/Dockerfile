@@ -9,6 +9,12 @@ LABEL key="1.0"
 ENV TZ=Asia/Shanghai
 RUN echo $TZ > /etc/timezone && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime
 
+# 使用阿里云的 dnf 源
+RUN curl -o /etc/yum.repos.d/fedora.repo https://mirrors.aliyun.com/repo/fedora.repo && \
+    curl -o /etc/yum.repos.d/fedora-updates.repo https://mirrors.aliyun.com/repo/fedora-updates.repo && \
+    curl -o /etc/yum.repos.d/fedora-modular.repo https://mirrors.aliyun.com/repo/fedora-modular.repo
+
+
 # 更新系统
 RUN dnf update -y
 
