@@ -7,14 +7,30 @@ echo "Build and run Docker container..."
 # 获取上一级目录的绝对路径
 PARENT_DIR="$(cd .. && pwd)"
 
-# 构建Docker镜像
-docker build -t fedora-ssh .
+# 运行容器，并将项目 project 目录映射到容器中的 ～/project，并赋予读写权限
+# 容器的 ssh 服务的监听端口设置为 2222 ，使用 ssh -p 2222 oyzx@localhost 远程连接 docker 容器
 
-# 运行容器，并将上一级的 project 目录映射到容器中的 /project
-# 同时映射SSH端口，这里将容器的22端口映射到主机的2222端口
+echo "Stop and remove Docker container..."
+docker stop fedora_test > /dev/null 2>&1
+docker rm -v -f fedora_test > /dev/null 2>&1
+
+echo "Build and run Docker container..."
+
+# 获取上一级目录的绝对路径
+PARENT_DIR="$(cd .. && pwd)"
+
+# 运行容器，并将项目 project 目录映射到容器中的 ～/project，并赋予读写权限
+# 容器的 ssh 服务的监听端口设置为 2222 ，使用 ssh -p 2222 oyzx@localhost 远程连接 docker 容器
+# 添加公钥，实现 ssh 免密登陆
 docker run -it \
   --name fedora_test \
-  -v "$PARENT_DIR/project":/project \
-  -p 2222:22 \
-  fedora-ssh \
-  /usr/sbin/sshd -D
+  --net=host \
+  -v "$PARENT_DIR/project":/home/oyzx/project \
+  -v "/Users/ouyangzhaoxin/.ssh/id_ed25519.pub:/home/oyzx/.ssh/authorized_keys" \
+  fedora \
+  /bin/bash -c "\
+    chmod -R 775 /home/oyzx/project && \
+    chmod 600 /home/oyzx/.ssh/authorized_keys && \
+    chown oyzx:oyzx /home/oyzx/.ssh/authorized_keys && \
+    /usr/sbin/sshd -D -p 2222 & \
+    exec /bin/bash"

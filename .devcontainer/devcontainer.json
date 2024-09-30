@@ -8,10 +8,16 @@
   // 设置容器的名称
   "runArgs": [
     "--name",
-    "fedora_test"
+    "fedora_test",
+    "--net=host"
   ],
+  // 设置映射目录，consistent 表示容器和主机之间的文件系统完全一致
   "mounts": [
-    // 设置映射目录，consistent 表示容器和主机之间的文件系统完全一致
-    "source=/Users/ouyangzhaoxin/Downloads/Dev_Container/project,target=/project,type=bind,consistency=consistent"
-  ]
+    "source=${localWorkspaceFolder}/project,target=/home/oyzx/project,type=bind,consistency=consistent",
+    "source=/Users/ouyangzhaoxin/.ssh/id_ed25519.pub,target=/home/oyzx/.ssh/authorized_keys,type=bind,consistency=consistent"
+  ],
+  "settings": {
+    "terminal.integrated.shell.linux": "/bin/bash"
+  },
+  "postCreateCommand": "chmod -R 775 /home/oyzx/project && chmod 600 /home/oyzx/.ssh/authorized_keys && chown oyzx:oyzx /home/oyzx/.ssh/authorized_keys && /usr/sbin/sshd -D -p 2222 && exec /bin/bash"
 }

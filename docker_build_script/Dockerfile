@@ -3,26 +3,45 @@ FROM fedora:latest
 
 LABEL key="1.0"
 
+# 设置环境变量
+ENV Server_USER="oyzx" \
+    TZ=Asia/Shanghai \
+    Client_USER="ouyangzhaoxin"
+
+
+
 # 设置时区
-ENV TZ=Asia/Shanghai
 RUN echo $TZ > /etc/timezone && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime
 
-
-# 更新系统并安装必要软件
+# 安装必要的软件
 RUN dnf update -y && \
-    dnf install -y gdb @'C Development Tools and Libraries' cmake git openssh-server gdb pkg-config valgrind systemd iproute net-tools
+    dnf install -y \
+    sudo \
+    gdb \
+    @"C Development Tools and Libraries" \
+    cmake \
+    git \
+    openssh-server \
+    pkg-config \
+    valgrind \
+    systemd \
+    iproute \
+    net-tools \
+    make \
+    vim \
+    neovim \
+    procps-ng \
+    fastfetch && \
+    dnf clean all
 
-# 设置root密码为1
-RUN echo 'root:1' | chpasswd
+# 设置 root 密码，创建用户，并设置 sudo 无需密码
+RUN echo 'root:1' | chpasswd && \
+    useradd -m $Server_USER && \
+    echo "$Server_USER:1" | chpasswd && \
+    usermod -aG wheel $Server_USER && \
+    echo "$Server_USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
-# 配置SSH允许root登录
-RUN sed -i 's/#PermitRootLogin yes/PermitRootLogin yes/' /etc/ssh/sshd_config
-
-# 生成SSH密钥
-RUN ssh-keygen -A
-
-# 设置容器启动时运行SSH服务
-CMD ["/usr/sbin/sshd", "-D"]
-
-# 暴露端口
-EXPOSE 22
+# 配置 SSH 服务
+RUN ssh-keygen -A && \
+    echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config && \
+    echo 'PasswordAuthentication yes' >> /etc/ssh/sshd_config
