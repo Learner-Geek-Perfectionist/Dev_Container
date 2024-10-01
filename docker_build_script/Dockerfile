@@ -17,24 +17,36 @@ RUN echo $TZ > /etc/timezone && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime
 RUN dnf update -y && \
     dnf install -y \
     sudo \
-    gdb \
-    @"C Development Tools and Libraries" \
-    cmake \
-    git \
+    "C Development Tools and Libraries" \
     openssh-server \
+    zsh \
     pkg-config \
-    valgrind \
     systemd \
     iproute \
     net-tools \
+    fd \
+    rg \
+    fzf \
     make \
     vim \
+    ruby \
+    nodejs \
+    cmake \
     neovim \
     procps-ng \
+    iputils \
+    docker \
+    htop \
+    traceroute \
+    tree \
     fastfetch && \
     dnf clean all
 
-# 设置 root 密码，创建用户，并设置 sudo 无需密码
+# 添加初始化脚本
+COPY init.sh /tmp/init.sh
+RUN chmod +x /init.sh
+
+# 设置 root 密码；创建用户 oyzx ；设置用户 oyzx 密码；设置用户 oyzx 无需 sudo 密码。
 RUN echo 'root:1' | chpasswd && \
     useradd -m $Server_USER && \
     echo "$Server_USER:1" | chpasswd && \
