@@ -1,38 +1,23 @@
 #include <iostream>
 
-class Base
+#include <vector>
+
+// using namespace std;
+
+template <typename T, typename U>
+constexpr bool is_same_v = false; // 主模版
+
+template <typename T>
+constexpr bool is_same_v<T, T> = true; // 偏特化模版
+
+template <typename T, typename SFINAE= typename std::enable_if<is_same_v<T, int>>::type>
+void f(T t)
 {
-public:
-    virtual void foo()
-    {
-    }
-
-    // 析构函数
-    ~Base()
-    {
-        std::cout << "Base destructor called" << std::endl;
-    }
-};
-
-class Derived : public Base
-{
-private:
-    int* data;
-
-public:
-    Derived(): data(new int[10])
-    {
-    }
-
-    ~Derived()
-    {
-        std::cout << "Derived destructor called" << std::endl;
-        delete[] data;
-    }
-};
+    puts("123");
+}
 
 int main()
 {
-    Base* ptr = new Derived(); //未定义行为！
-    delete ptr;
+    f(1);
+    // f(1u);
 }
