@@ -34,6 +34,7 @@ RUN dnf update -y && \
     ninja-build \
     neovim \
     ruby \
+    kitty \
     cmake \
     nodejs \
     iputils \
