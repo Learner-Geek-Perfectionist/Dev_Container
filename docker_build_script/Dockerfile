@@ -6,9 +6,7 @@ LABEL key="1.0"
 
 
 # 设置环境变量
-ENV Server_USER="oyzx" \
-    TZ=Asia/Shanghai \
-    Client_USER="ouyangzhaoxin"
+ENV TZ=Asia/Shanghai 
 
 # 设置时区
 RUN echo $TZ > /etc/timezone && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime
@@ -20,15 +18,18 @@ RUN sed -e 's|^metalink=|#metalink=|g' \
          /etc/yum.repos.d/fedora.repo \
          /etc/yum.repos.d/fedora-updates.repo
 
+# 预先生成和存储软件包元数据
 RUN dnf makecache
 
-# 安装必要的软件
-RUN dnf update -y && \
-    dnf install -y  \
+
+# 更新软件包列表、安装软件包，并清理缓存，所有这些操作都在一个 RUN 指令中完成
+RUN dnf update -y && dnf install -y \
     openssh-server \
     iproute \
     net-tools \
     fd-find \
+    git \
+    unzip \
     ripgrep \
     fzf \
     ninja-build \
@@ -43,20 +44,19 @@ RUN dnf update -y && \
     traceroute \
     fastfetch \
     tree \
-    zsh &&\
+    coreutils \
+    zsh \
+    fontconfig \
+    python3 \
+    wget \
+    pkgconf-pkg-config \
+    graphviz \
+    zip \
+    java-latest-openjdk \
+    golang \
+    openssl && \
     dnf group install -y "C Development Tools and Libraries" && \
     dnf clean all
 
 
 
-# 设置 root 密码；创建用户 oyzx ；设置用户 oyzx 密码；设置用户 oyzx 无需 sudo 密码。
-RUN echo 'root:1' | chpasswd && \
-    useradd -m $Server_USER && \
-    echo "$Server_USER:1" | chpasswd && \
-    usermod -aG wheel $Server_USER && \
-    echo "$Server_USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-
-# 在容器中添加 SSH 「密钥」；允许客户端以 root 用户登陆容器
-RUN ssh-keygen -A && \
-    echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config && \
-    echo 'PasswordAuthentication yes' >> /etc/ssh/sshd_config
