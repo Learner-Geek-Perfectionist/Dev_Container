@@ -2,7 +2,7 @@
 # 删除所有的 Docker 相关的内容
 
 ```shell
-docker rm -f $(docker ps -aq) && docker rmi -f $(docker images -q) && docker volume rm $(docker volume ls -q) && docker network rm $(docker network ls -q --filter type=custom)
+docker rm -f $(docker ps -aq) && docker rmi -f $(docker images -q) && docker volume rm $(docker volume ls -q) && docker network rm $(docker network ls -q --filter type=custom) && docker builder prune -a
 ```
 
 ## Directory Structure
