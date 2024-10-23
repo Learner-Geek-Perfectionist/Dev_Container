@@ -1,5 +1,5 @@
 # Container Development Environment
-# 删除所有的 Docker 相关的内容
+# 删除所有 Docker 相关的内容
 
 ```shell
 docker system prune -a --volumes
