@@ -21,10 +21,6 @@ RUN sed -e 's|^metalink=|#metalink=|g' \
 # 预先生成和存储软件包元数据
 RUN dnf makecache
 
-# 复制文件到 root 用户的家目录
-COPY /.zprofile /root/
-COPY /.zshrc /root/
-COPY /.config /root/.config
 
 # 更新软件包列表、安装软件包，并清理缓存，所有这些操作都在一个 RUN 指令中完成
 RUN dnf update -y && dnf install -y \
@@ -88,7 +84,16 @@ RUN if [ -z "${DOWNLOAD_URL+x}" ]; then \
     fi
 
 
+# 1.浅克隆仓库到临时目录
+RUN git clone --depth 1 https://github.com/Learner-Geek-Perfectionist/Dotfiles /tmp/dotfiles
 
+# 2.复制所需文件到 /root 目录
+RUN cp /tmp/dotfiles/.zprofile /root/.zprofile && \
+    cp /tmp/dotfiles/.zshrc /root/.zshrc && \
+    cp -r /tmp/dotfiles/.config /root/.config
+
+# 3.清理临时文件
+RUN rm -rf /tmp/dotfiles
 
 
 # 安装 SDKMAN 和 kotlin
