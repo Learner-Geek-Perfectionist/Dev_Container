@@ -59,6 +59,7 @@ RUN apt-get update && apt-get install -y \
 RUN git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf \
     && yes | ~/.fzf/install --no-update-rc
 
+# 安装 Kotlin/Native
 RUN ARCH=$(uname -m) && \
     LATEST_VERSION=$(curl -s -L -I https://github.com/JetBrains/kotlin/releases/latest | grep -i location | sed -E 's/.*tag\/(v[0-9\.]+).*/\1/') && \
     if [ "$ARCH" == "x86_64" ]; then \
@@ -76,11 +77,6 @@ RUN ARCH=$(uname -m) && \
     tar -xzf kotlin_native.tar.gz -C "$INSTALL_DIR" --strip-components=1 && \
     rm kotlin_native.tar.gz
 
-
-# 设置 Kotlin/Native 环境变量
-ENV KOTLIN_NATIVE_HOME=/opt/kotlin-native
-
 # 安装 SDKMAN 和 Java
 RUN curl -s "https://get.sdkman.io" | bash \
-    && echo "source \"$HOME/.sdkman/bin/sdkman-init.sh\"" >> "$HOME/.bashrc" \
     && bash -c "source $HOME/.sdkman/bin/sdkman-init.sh && sdk install java"
