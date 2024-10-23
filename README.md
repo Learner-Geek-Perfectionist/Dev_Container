@@ -1,4 +1,8 @@
 # Container Development Environment
+# 删除所有的 Docker 相关的内容
+
+docker rm -f $(docker ps -aq) && docker rmi -f $(docker images -q) && docker volume rm $(docker volume ls -q) && docker network rm $(docker network ls -q --filter type=custom)
+
 
 ## Directory Structure
 Below is the directory structure of the repository, providing a clear view of the components and their organization:
