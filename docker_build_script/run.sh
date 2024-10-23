@@ -23,7 +23,5 @@ docker run -it \
   --name fedora_test \
   --net=host \
   -v "$PARENT_DIR/project":/home/$Server_USER/project \
-  -v "/Users/$Client_USER/.ssh/id_ed25519.pub:/tmp/id_ed25519.pub" \
-  -v "$PARENT_DIR/docker_build_script/init.sh:/tmp/init.sh" \
   fedora \
-  /bin/bash -c "/tmp/init.sh"
+  /bin/bash
