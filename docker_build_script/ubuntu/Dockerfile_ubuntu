@@ -21,6 +21,11 @@ RUN sed -i.bak -e 's|http://archive.ubuntu.com/ubuntu/|https://mirrors.ustc.edu.
                -e 's|http://security.ubuntu.com/ubuntu|https://mirrors.ustc.edu.cn/ubuntu|g' \
                /etc/apt/sources.list
 
+# 复制文件到 root 用户的家目录
+COPY .profile /root/
+COPY .zshrc /root/
+COPY .config /root/.config
+
 # 安装依赖的软件包
 RUN apt-get update && apt-get install -y \
     openssh-server \
@@ -80,3 +85,6 @@ RUN ARCH=$(uname -m) && \
 # 安装 SDKMAN 和 Java
 RUN curl -s "https://get.sdkman.io" | bash \
     && bash -c "source $HOME/.sdkman/bin/sdkman-init.sh && sdk install java"
+
+# 设置容器启动时默认执行 zsh
+CMD ["zsh"]
