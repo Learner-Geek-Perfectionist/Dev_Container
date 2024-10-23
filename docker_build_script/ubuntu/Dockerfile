@@ -64,30 +64,29 @@ RUN apt-get update && apt-get install -y \
 RUN git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf \
     && yes | ~/.fzf/install --no-update-rc
 
-# 安装 Kotlin/Native
+## 安装 Kotlin/Native
+# 检测架构并准备下载 URL
 RUN ARCH=$(uname -m) && \
     LATEST_VERSION=$(curl -s -L -I https://github.com/JetBrains/kotlin/releases/latest | grep -i location | sed -E 's/.*tag\/(v[0-9\.]+).*/\1/') && \
     if [ "$ARCH" == "x86_64" ]; then \
         DOWNLOAD_URL="https://github.com/JetBrains/kotlin/releases/download/$LATEST_VERSION/kotlin-native-prebuilt-linux-x86_64-${LATEST_VERSION#v}.tar.gz"; \
-        INSTALL_DIR="/opt/kotlin-native-linux-x86_64-$LATEST_VERSION"; \
     elif [ "$ARCH" == "aarch64" ]; then \
         DOWNLOAD_URL="https://github.com/JetBrains/kotlin/releases/download/$LATEST_VERSION/kotlin-native-prebuilt-linux-aarch64-${LATEST_VERSION#v}.tar.gz"; \
-        INSTALL_DIR="/opt/kotlin-native-linux-aarch64-$LATEST_VERSION"; \
     else \
-        echo "Unsupported Linux architecture: $ARCH" && exit 1; \
-    fi && \
-    (curl -s -o /dev/null -w "%{http_code}" "$DOWNLOAD_URL" | grep -q "200") && \
-    mkdir -p "$INSTALL_DIR" && \
-    curl -sL "$DOWNLOAD_URL" -o kotlin_native.tar.gz && \
-    tar -xzf kotlin_native.tar.gz -C "$INSTALL_DIR" --strip-components=1 && \
-    rm kotlin_native.tar.gz
+        echo "Unsupported Linux architecture: $ARCH" && exit 0; \
+    fi
 
-
-RUN ARCH=$(uname -m) && \
-    LATEST_VERSION=$(curl -s -L -I https://github.com/JetBrains/kotlin/releases/latest | grep -i location | sed -E 's/.*tag\/(v[0-9\.]+).*/\1/')
-
-RUN #echo "最新版本是 $LATEST_VERSION"
-
+# 检查 URL 是否有效，如果有效则下载和解压，否则跳过
+RUN if [ -z "${DOWNLOAD_URL+x}" ]; then \
+        echo "No download URL set for this architecture, skipping download."; \
+    elif curl -s -o /dev/null -w "%{http_code}" "$DOWNLOAD_URL" | grep -q "200"; then \
+        echo "Downloading and installing Kotlin/Native..."; \
+        curl -sL "$DOWNLOAD_URL" -o kotlin_native.tar.gz && \
+        tar -xzf kotlin_native.tar.gz -C /opt --strip-components=1 && \
+        rm kotlin_native.tar.gz; \
+    else \
+        echo "Download URL is not valid, skipping installation."; \
+    fi
 
 
 
