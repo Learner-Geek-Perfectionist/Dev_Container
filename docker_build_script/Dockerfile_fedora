@@ -1,0 +1,59 @@
+# 基础镜像
+FROM fedora:latest
+
+LABEL key="1.0"
+
+
+
+# 设置环境变量
+ENV TZ=Asia/Shanghai 
+
+# 设置时区
+RUN echo $TZ > /etc/timezone && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime
+
+# 设置中科大镜像
+RUN sed -e 's|^metalink=|#metalink=|g' \
+         -e 's|^#baseurl=http://download.example/pub/fedora/linux|baseurl=https://mirrors.ustc.edu.cn/fedora|g' \
+         -i.bak \
+         /etc/yum.repos.d/fedora.repo \
+         /etc/yum.repos.d/fedora-updates.repo
+
+# 预先生成和存储软件包元数据
+RUN dnf makecache
+
+
+# 更新软件包列表、安装软件包，并清理缓存，所有这些操作都在一个 RUN 指令中完成
+RUN dnf update -y && dnf install -y \
+    openssh-server \
+    iproute \
+    net-tools \
+    fd-find \
+    git \
+    unzip \
+    ripgrep \
+    fzf \
+    ninja-build \
+    neovim \
+    ruby \
+    kitty \
+    cmake \
+    nodejs \
+    iputils \
+    procps-ng \
+    htop \
+    traceroute \
+    fastfetch \
+    tree \
+    coreutils \
+    zsh \
+    fontconfig \
+    python3 \
+    wget \
+    pkgconf-pkg-config \
+    graphviz \
+    zip \
+    java-latest-openjdk \
+    golang \
+    openssl && \
+    dnf group install -y "C Development Tools and Libraries" && \
+    dnf clean all
