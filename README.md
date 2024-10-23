@@ -2,7 +2,7 @@
 # 删除所有 Docker 相关的内容
 
 ```shell
-docker system prune -a --volumes
+docker stop $(docker ps -aq) && docker rm $(docker ps -aq) && docker rmi -f $(docker images -q) && docker network prune -f && docker volume prune -f
 ```
 
 ## Directory Structure
