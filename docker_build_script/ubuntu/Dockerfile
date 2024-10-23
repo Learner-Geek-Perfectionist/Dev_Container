@@ -22,9 +22,9 @@ RUN sed -i.bak -e 's|http://archive.ubuntu.com/ubuntu/|https://mirrors.ustc.edu.
                /etc/apt/sources.list
 
 # 复制文件到 root 用户的家目录
-COPY .profile /root/
-COPY .zshrc /root/
-COPY .config /root/.config
+COPY /.zprofile /root/
+COPY /.zshrc /root/
+COPY /.config /root/.config
 
 # 安装依赖的软件包
 RUN apt-get update && apt-get install -y \
@@ -82,9 +82,19 @@ RUN ARCH=$(uname -m) && \
     tar -xzf kotlin_native.tar.gz -C "$INSTALL_DIR" --strip-components=1 && \
     rm kotlin_native.tar.gz
 
+
+RUN ARCH=$(uname -m) && \
+    LATEST_VERSION=$(curl -s -L -I https://github.com/JetBrains/kotlin/releases/latest | grep -i location | sed -E 's/.*tag\/(v[0-9\.]+).*/\1/')
+
+RUN #echo "最新版本是 $LATEST_VERSION"
+
+
+
+
 # 安装 SDKMAN 和 Java
 RUN curl -s "https://get.sdkman.io" | bash \
     && bash -c "source $HOME/.sdkman/bin/sdkman-init.sh && sdk install java"
 
 # 设置容器启动时默认执行 zsh
 CMD ["zsh"]
+
