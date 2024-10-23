@@ -21,10 +21,7 @@ RUN sed -i.bak -e 's|http://archive.ubuntu.com/ubuntu/|https://mirrors.ustc.edu.
                -e 's|http://security.ubuntu.com/ubuntu|https://mirrors.ustc.edu.cn/ubuntu|g' \
                /etc/apt/sources.list
 
-# 复制文件到 root 用户的家目录
-COPY /.zprofile /root/
-COPY /.zshrc /root/
-COPY /.config /root/.config
+
 
 # 安装依赖的软件包
 RUN apt-get update && apt-get install -y \
@@ -59,6 +56,21 @@ RUN apt-get update && apt-get install -y \
     curl \
     tar \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# 复制文件到 root 用户的家目录
+
+
+# 1.浅克隆仓库到临时目录
+RUN git clone --depth 1 https://github.com/Learner-Geek-Perfectionist/Dotfiles /tmp/dotfiles
+
+# 2.复制所需文件到 /root 目录
+RUN cp /tmp/dotfiles/.zprofile /root/.zprofile && \
+    cp /tmp/dotfiles/.zshrc /root/.zshrc && \
+    cp -r /tmp/dotfiles/.config /root/.config
+
+# 3.清理临时文件
+RUN rm -rf /tmp/dotfiles
+
 
 # 安装 fzf
 RUN git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf \
@@ -96,4 +108,3 @@ RUN curl -s "https://get.sdkman.io" | bash \
 
 # 设置容器启动时默认执行 zsh
 CMD ["zsh"]
-
