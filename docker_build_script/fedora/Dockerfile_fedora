@@ -21,6 +21,10 @@ RUN sed -e 's|^metalink=|#metalink=|g' \
 # 预先生成和存储软件包元数据
 RUN dnf makecache
 
+# 复制文件到 root 用户的家目录
+COPY .profile /root/
+COPY .zshrc /root/
+COPY .config /root/.config
 
 # 更新软件包列表、安装软件包，并清理缓存，所有这些操作都在一个 RUN 指令中完成
 RUN dnf update -y && dnf install -y \
@@ -80,3 +84,6 @@ RUN ARCH=$(uname -m) && \
 # 安装 SDKMAN 和 kotlin
 RUN curl -s "https://get.sdkman.io" | bash \
     && bash -c "source $HOME/.sdkman/bin/sdkman-init.sh && sdk install kotlin"
+
+# 设置容器启动时默认执行 zsh
+CMD ["zsh"]
