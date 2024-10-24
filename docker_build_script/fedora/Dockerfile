@@ -54,6 +54,7 @@ RUN dnf update -y && dnf install -y \
     graphviz \
     java-latest-openjdk \
     golang \
+    rust \
     openssl && \
     dnf group install -y "C Development Tools and Libraries" && \
     dnf clean all
@@ -84,6 +85,8 @@ RUN if [ -z "${DOWNLOAD_URL+x}" ]; then \
     fi
 
 
+
+# 复制文件到 root 用户的家目录
 # 1.浅克隆仓库到临时目录
 RUN git clone --depth 1 https://github.com/Learner-Geek-Perfectionist/Dotfiles /tmp/dotfiles
 
@@ -96,9 +99,22 @@ RUN cp /tmp/dotfiles/.zprofile /root/.zprofile && \
 RUN rm -rf /tmp/dotfiles
 
 
+
+
+# 安装 docker
+# 1.下载Docker安装脚本
+RUN curl -fsSL https://get.docker.com -o get-docker.sh
+# 2.执行下载的安装脚本
+RUN sh get-docker.sh
+
+
+
 # 安装 SDKMAN 和 kotlin
 RUN curl -s "https://get.sdkman.io" | bash \
     && bash -c "source $HOME/.sdkman/bin/sdkman-init.sh && sdk install kotlin"
+
+
+
 
 # 设置容器启动时默认执行 zsh
 CMD ["zsh"]

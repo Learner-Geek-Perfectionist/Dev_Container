@@ -54,6 +54,7 @@ RUN apt update && apt install -y \
     sudo\
     kotlin \
     golang \
+    rustc \
     software-properties-common \
     valgrind \
     curl \
@@ -61,8 +62,6 @@ RUN apt update && apt install -y \
     && apt clean && rm -rf /var/lib/apt/lists/*
 
 # 复制文件到 root 用户的家目录
-
-
 # 1.浅克隆仓库到临时目录
 RUN git clone --depth 1 https://github.com/Learner-Geek-Perfectionist/Dotfiles /tmp/dotfiles
 
@@ -73,6 +72,8 @@ RUN cp /tmp/dotfiles/.zprofile /root/.zprofile && \
 
 # 3.清理临时文件
 RUN rm -rf /tmp/dotfiles
+
+
 
 # 安装 fastfetch
 # 1.克隆fastfetch源代码
@@ -86,10 +87,18 @@ RUN cd /fastfetch && \
     make install
 
 
+# 安装 docker
+# 1.下载Docker安装脚本
+RUN curl -fsSL https://get.docker.com -o get-docker.sh
+# 2.执行下载的安装脚本
+RUN sh get-docker.sh
+
 
 # 安装 fzf
 RUN git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf \
     && yes | ~/.fzf/install --no-update-rc
+
+
 
 ## 安装 Kotlin/Native
 # 检测架构并准备下载 URL
@@ -117,9 +126,13 @@ RUN if [ -z "${DOWNLOAD_URL+x}" ]; then \
 
 
 
+
+
 # 安装 SDKMAN 和 Java
 RUN curl -s "https://get.sdkman.io" | bash \
     && bash -c "source $HOME/.sdkman/bin/sdkman-init.sh && sdk install java"
+
+
 
 # 设置容器启动时默认执行 zsh
 CMD ["zsh"]
