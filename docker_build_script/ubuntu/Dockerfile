@@ -11,7 +11,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Asia/Shanghai
 
 # 安装 tzdata 包并设置时区
-RUN apt-get update && apt-get install -y tzdata \
+RUN apt update && apt install -y tzdata \
     && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime \
     && echo $TZ > /etc/timezone \
     && dpkg-reconfigure --frontend noninteractive tzdata
@@ -24,14 +24,17 @@ RUN sed -i.bak -e 's|http://archive.ubuntu.com/ubuntu/|https://mirrors.ustc.edu.
 
 
 # 安装依赖的软件包
-RUN apt-get update && apt-get install -y \
+RUN apt update && apt install -y \
     openssh-server \
     net-tools \
     git \
     unzip \
+    zip \
     ninja-build \
     neovim \
     ruby-full \
+    fd-find \
+    ripgrep \
     cmake \
     nodejs \
     iputils-ping \
@@ -48,14 +51,14 @@ RUN apt-get update && apt-get install -y \
     wget \
     pkg-config \
     graphviz \
+    sudo\
     kotlin \
     golang \
-    zip \
     software-properties-common \
     valgrind \
     curl \
     tar \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    && apt clean && rm -rf /var/lib/apt/lists/*
 
 # 复制文件到 root 用户的家目录
 
@@ -70,6 +73,18 @@ RUN cp /tmp/dotfiles/.zprofile /root/.zprofile && \
 
 # 3.清理临时文件
 RUN rm -rf /tmp/dotfiles
+
+# 安装 fastfetch
+# 1.克隆fastfetch源代码
+RUN git clone https://github.com/LinusDierheimer/fastfetch.git /fastfetch
+
+# 2.编译和安装fastfetch
+RUN cd /fastfetch && \
+    mkdir build && cd build && \
+    cmake .. && \
+    make && \
+    make install
+
 
 
 # 安装 fzf

@@ -30,7 +30,9 @@ RUN dnf update -y && dnf install -y \
     fd-find \
     git \
     unzip \
+    zip \
     ripgrep \
+    fastfetch \
     fzf \
     ninja-build \
     neovim \
@@ -42,7 +44,6 @@ RUN dnf update -y && dnf install -y \
     procps-ng \
     htop \
     traceroute \
-    fastfetch \
     tree \
     coreutils \
     zsh \
@@ -51,7 +52,6 @@ RUN dnf update -y && dnf install -y \
     wget \
     pkgconf-pkg-config \
     graphviz \
-    zip \
     java-latest-openjdk \
     golang \
     openssl && \
