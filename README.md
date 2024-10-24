@@ -2,7 +2,7 @@
 # 删除所有 Docker 相关的内容
 
 ```shell
-docker stop $(docker ps -aq) && docker rm $(docker ps -aq) && docker rmi -f $(docker images -q) && docker network prune -f && docker volume prune -a -f
+docker stop $(docker ps -aq) && docker rm -f $(docker ps -aq) && docker system prune -a --volumes --force && docker builder prune --all --force
 ```
 
 ## Directory Structure
@@ -15,12 +15,20 @@ Dev_Container
 │   └── devcontainer.json
 ├── README.md
 ├── docker_build_script
-│   ├── Dockerfile
-│   ├── build.sh
-│   └── run.sh
+│   ├── fedora
+│   │   ├── Dockerfile
+│   │   ├── build.sh
+│   │   ├── init.sh
+│   │   └── run.sh
+│   └── ubuntu
+│       ├── Dockerfile
+│       ├── build.sh
+│       ├── init.sh
+│       └── run.sh
 └── project
     ├── CMakeLists.txt
     └── src
+        └── main.cpp
 ```
 
 
