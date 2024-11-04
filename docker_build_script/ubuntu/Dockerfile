@@ -51,7 +51,9 @@ RUN apt update && apt install -y \
     wget \
     pkg-config \
     graphviz \
-    sudo\
+    sudo \
+    wireshark \
+    tcpdump \
     kotlin \
     golang \
     rustc \
