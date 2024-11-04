@@ -7,14 +7,6 @@ LABEL key="1.0"
 # 设置非交互式安装模式，避免在构建过程中出现提示
 ENV DEBIAN_FRONTEND=noninteractive
 
-# 设置时区环境变量
-ENV TZ=Asia/Shanghai
-
-# 安装 tzdata 包并设置时区
-RUN apt update && apt install -y tzdata \
-    && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime \
-    && echo $TZ > /etc/timezone \
-    && dpkg-reconfigure --frontend noninteractive tzdata
 
 # 设置中科大镜像为 Ubuntu 源
 RUN sed -i.bak -e 's|http://archive.ubuntu.com/ubuntu/|https://mirrors.ustc.edu.cn/ubuntu/|g' \
@@ -61,7 +53,25 @@ RUN apt update && apt install -y \
     valgrind \
     curl \
     tar \
+    man \
     && apt clean && rm -rf /var/lib/apt/lists/*
+
+
+# 设置时区环境变量
+ENV TZ=Asia/Shanghai
+
+# 设置时区
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime \
+    && echo $TZ > /etc/timezone \
+    && dpkg-reconfigure --frontend noninteractive tzdata
+
+# 生成所需的语言环境
+RUN locale-gen zh_CN.UTF-8
+
+# 设置默认的语言环境
+ENV LANG=zh_CN.UTF-8
+ENV LC_ALL=zh_CN.UTF-8
+
 
 # 复制文件到 root 用户的家目录
 # 1.浅克隆仓库到临时目录

@@ -3,13 +3,7 @@ FROM fedora:latest
 
 LABEL key="1.0"
 
-
-
-# 设置环境变量
-ENV TZ=Asia/Shanghai 
-
-# 设置时区
-RUN echo $TZ > /etc/timezone && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime
+RUN  sed -i '/tsflags=nodocs/s/^/#/' /etc/dnf/dnf.conf
 
 # 设置中科大镜像
 RUN sed -e 's|^metalink=|#metalink=|g' \
@@ -18,12 +12,15 @@ RUN sed -e 's|^metalink=|#metalink=|g' \
          /etc/yum.repos.d/fedora.repo \
          /etc/yum.repos.d/fedora-updates.repo
 
+
 # 预先生成和存储软件包元数据
 RUN dnf makecache
 
 
 # 更新软件包列表、安装软件包，并清理缓存，所有这些操作都在一个 RUN 指令中完成
 RUN dnf update -y && dnf install -y \
+    glibc \
+    glibc-common \
     openssh-server \
     iproute \
     net-tools \
@@ -57,12 +54,27 @@ RUN dnf update -y && dnf install -y \
     java-latest-openjdk \
     golang \
     rust \
+    man \
+    man-pages \
+    man-db \
+    glibc-locale-source \
+    glibc-langpack-zh \
     openssl && \
     dnf group install -y --skip-unavailable "c-development" && \
     dnf clean all
 
 
-## 安装 Kotlin/Native
+# 设置时区：
+RUN ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
+    echo "Asia/Shanghai" > /etc/timezone
+
+# 设置语言环境：
+ENV LANG=zh_CN.UTF-8
+ENV LC_ALL=zh_CN.UTF-8
+RUN localedef -c -f UTF-8 -i zh_CN zh_CN.UTF-8
+
+
+# 安装 Kotlin/Native
 # 检测架构并准备下载 URL
 RUN ARCH=$(uname -m) && \
     LATEST_VERSION=$(curl -s -L -I https://github.com/JetBrains/kotlin/releases/latest | grep -i location | sed -E 's/.*tag\/(v[0-9\.]+).*/\1/') && \
@@ -100,7 +112,9 @@ RUN cp /tmp/dotfiles/.zprofile /root/.zprofile && \
 # 3.清理临时文件
 RUN rm -rf /tmp/dotfiles
 
-
+RUN dnf install -y coreutils-common
+# 生成和更新手册页的数据库
+RUN mandb
 
 
 # 安装 docker
