@@ -58,7 +58,7 @@ RUN dnf update -y && dnf install -y \
     golang \
     rust \
     openssl && \
-    dnf group install -y "C Development Tools and Libraries" && \
+    dnf group install -y --skip-unavailable "c-development" && \
     dnf clean all
 
 
