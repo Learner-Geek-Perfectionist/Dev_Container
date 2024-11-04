@@ -52,6 +52,8 @@ RUN dnf update -y && dnf install -y \
     wget \
     pkgconf-pkg-config \
     graphviz \
+    wireshark \
+    tcpdump \
     java-latest-openjdk \
     golang \
     rust \
