@@ -16,8 +16,6 @@ RUN sed -i.bak -e 's|http://archive.ubuntu.com/ubuntu/|https://mirrors.ustc.edu.
 # 安装依赖的软件包
 RUN apt update && apt install -y \
     openssh-server \
-    systemctl \
-    systemd \
     debconf-utils \
     net-tools \
     git \
