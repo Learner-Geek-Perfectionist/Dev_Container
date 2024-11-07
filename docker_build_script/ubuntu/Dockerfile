@@ -106,11 +106,26 @@ RUN cd /fastfetch && \
 
 
 
-# 安装 docker
-# 1.下载Docker安装脚本
-RUN curl -fsSL https://get.docker.com -o get-docker.sh
-# 2.执行下载的安装脚本
-RUN sh get-docker.sh
+# 安装 Docker
+RUN curl -fsSL https://get.docker.com -o get-docker.sh \
+    && sh get-docker.sh \
+    && rm get-docker.sh
+
+
+# 设置 Docker 镜像源
+RUN mkdir -p /etc/docker \
+    && echo '{ \
+      "registry-mirrors": [ \
+        "https://docker.m.daocloud.io", \
+        "https://mirror.baidubce.com", \
+        "http://hub-mirror.c.163.com" \
+      ] \
+    }' > /etc/docker/daemon.json
+
+# 清理缓存
+RUN apt clean && \
+    rm -rf /var/lib/apt/lists/*
+
 
 
 # 安装 fzf

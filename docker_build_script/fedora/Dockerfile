@@ -79,16 +79,21 @@ RUN ARCH=$(uname -m) && \
         echo "Unsupported Linux architecture: $ARCH" && exit 0; \
     fi
 
-# 检查 URL 是否有效，如果有效则下载和解压，否则跳过
+# 检查是否已安装 Kotlin/Native 和 URL 是否有效，如果有效则下载和解压，否则跳过
 RUN if [ -z "${DOWNLOAD_URL+x}" ]; then \
         echo "No download URL set for this architecture, skipping download."; \
-    elif curl -s -o /dev/null -w "%{http_code}" "$DOWNLOAD_URL" | grep -q "200"; then \
-        echo "Downloading and installing Kotlin/Native..."; \
-        curl -sL "$DOWNLOAD_URL" -o kotlin_native.tar.gz && \
-        tar -xzf kotlin_native.tar.gz -C /opt --strip-components=1 && \
-        rm kotlin_native.tar.gz; \
+    elif [ ! -d "/opt/kotlin-native" ]; then \
+        HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$DOWNLOAD_URL") && \
+        if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 300 ]; then \
+            echo "Downloading and installing Kotlin/Native..."; \
+            curl -sL "$DOWNLOAD_URL" -o /tmp/kotlin_native.tar.gz && \
+            tar -xzf /tmp/kotlin_native.tar.gz -C /opt --strip-components=1 && \
+            rm /tmp/kotlin_native.tar.gz; \
+        else \
+            echo "Download URL is not valid ($HTTP_STATUS), skipping installation."; \
+        fi; \
     else \
-        echo "Download URL is not valid, skipping installation."; \
+        echo "Kotlin/Native already installed at /opt/kotlin-native, skipping download and installation."; \
     fi
 
 
@@ -106,11 +111,23 @@ RUN cp /tmp/dotfiles/.zprofile /root/.zprofile && \
 RUN rm -rf /tmp/dotfiles
 
 
-# 安装 docker
-# 1.下载Docker安装脚本
-RUN curl -fsSL https://get.docker.com -o get-docker.sh
-# 2.执行下载的安装脚本
-RUN sh get-docker.sh
+# 安装 Docker
+RUN curl -fsSL https://get.docker.com -o get-docker.sh \
+    && sh get-docker.sh \
+    && rm get-docker.sh
+
+
+# 设置 Docker 镜像源
+RUN mkdir -p /etc/docker \
+    && echo '{ \
+      "registry-mirrors": [ \
+        "https://docker.m.daocloud.io", \
+        "https://mirror.baidubce.com", \
+        "http://hub-mirror.c.163.com" \
+      ] \
+    }' > /etc/docker/daemon.json
+
+
 
 
 # 安装 SDKMAN 和 kotlin
