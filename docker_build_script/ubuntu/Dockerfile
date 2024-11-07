@@ -13,11 +13,10 @@ RUN sed -i.bak -e 's|http://archive.ubuntu.com/ubuntu/|https://mirrors.ustc.edu.
                -e 's|http://security.ubuntu.com/ubuntu|https://mirrors.ustc.edu.cn/ubuntu|g' \
                /etc/apt/sources.list
 
-
-
 # 安装依赖的软件包
 RUN apt update && apt install -y \
     openssh-server \
+    debconf-utils \
     net-tools \
     git \
     unzip \
@@ -53,9 +52,14 @@ RUN apt update && apt install -y \
     valgrind \
     curl \
     tar \
-    man \
+    locales \
+    unminimize \
+    man-db \
     && apt clean && rm -rf /var/lib/apt/lists/*
 
+
+# 执行 unminimize 脚本
+RUN yes | unminimize
 
 # 设置时区环境变量
 ENV TZ=Asia/Shanghai
@@ -96,7 +100,10 @@ RUN cd /fastfetch && \
     mkdir build && cd build && \
     cmake .. && \
     make && \
-    make install
+    make install && \
+    cd / && \
+    rm -rf /fastfetch
+
 
 
 # 安装 docker

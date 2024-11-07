@@ -3,6 +3,7 @@ FROM fedora:latest
 
 LABEL key="1.0"
 
+# 注释 tsflags=nodocs, 从而安装 manual 手册
 RUN  sed -i '/tsflags=nodocs/s/^/#/' /etc/dnf/dnf.conf
 
 # 设置中科大镜像
@@ -12,13 +13,9 @@ RUN sed -e 's|^metalink=|#metalink=|g' \
          /etc/yum.repos.d/fedora.repo \
          /etc/yum.repos.d/fedora-updates.repo
 
-
-# 预先生成和存储软件包元数据
-RUN dnf makecache
-
-
 # 更新软件包列表、安装软件包，并清理缓存，所有这些操作都在一个 RUN 指令中完成
-RUN dnf update -y && dnf install -y \
+RUN dnf -y update && \
+    dnf install -y \
     glibc \
     glibc-common \
     openssh-server \
@@ -42,7 +39,6 @@ RUN dnf update -y && dnf install -y \
     htop \
     traceroute \
     tree \
-    coreutils \
     zsh \
     fontconfig \
     python3 \
@@ -54,14 +50,13 @@ RUN dnf update -y && dnf install -y \
     java-latest-openjdk \
     golang \
     rust \
-    man \
-    man-pages \
-    man-db \
     glibc-locale-source \
     glibc-langpack-zh \
     openssl && \
-    dnf group install -y --skip-unavailable "c-development" && \
-    dnf clean all
+    dnf install -y --setopt=tsflags= coreutils coreutils-common man-pages man-db && \
+    dnf group install -y --setopt=strict=0 "c-development" && \
+    dnf clean all && \
+    dnf makecache
 
 
 # 设置时区：
@@ -69,8 +64,6 @@ RUN ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
     echo "Asia/Shanghai" > /etc/timezone
 
 # 设置语言环境：
-ENV LANG=zh_CN.UTF-8
-ENV LC_ALL=zh_CN.UTF-8
 RUN localedef -c -f UTF-8 -i zh_CN zh_CN.UTF-8
 
 
@@ -112,10 +105,6 @@ RUN cp /tmp/dotfiles/.zprofile /root/.zprofile && \
 # 3.清理临时文件
 RUN rm -rf /tmp/dotfiles
 
-RUN dnf install -y coreutils-common
-# 生成和更新手册页的数据库
-RUN mandb
-
 
 # 安装 docker
 # 1.下载Docker安装脚本
@@ -124,12 +113,15 @@ RUN curl -fsSL https://get.docker.com -o get-docker.sh
 RUN sh get-docker.sh
 
 
-
 # 安装 SDKMAN 和 kotlin
 RUN curl -s "https://get.sdkman.io" | bash \
     && bash -c "source $HOME/.sdkman/bin/sdkman-init.sh && sdk install kotlin"
 
+# 确保安装必要的 manual 手册
+RUN dnf -y reinstall $(rpm -qads --qf "PACKAGE: %{NAME}\n" | sed -n -E '/PACKAGE: /{s/PACKAGE: // ; h ; b }; /^not installed/ { g; p }' | uniq)
 
+# 生成和更新手册页的数据库
+RUN mandb -c
 
 
 # 设置容器启动时默认执行 zsh
