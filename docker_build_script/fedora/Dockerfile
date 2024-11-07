@@ -19,6 +19,7 @@ RUN dnf -y update && \
     glibc \
     glibc-common \
     openssh-server \
+    systemd \
     iproute \
     net-tools \
     fd-find \
