@@ -52,6 +52,7 @@ RUN dnf -y update && \
     rust \
     glibc-locale-source \
     glibc-langpack-zh \
+    jq \
     openssl && \
     dnf install -y --setopt=tsflags= coreutils coreutils-common man-pages man-db && \
     dnf group install -y --setopt=strict=0 "c-development" && \
