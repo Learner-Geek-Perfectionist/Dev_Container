@@ -53,6 +53,7 @@ RUN dnf -y update && \
     glibc-locale-source \
     glibc-langpack-zh \
     jq \
+    eza \
     openssl && \
     dnf install -y --setopt=tsflags= coreutils coreutils-common man-pages man-db && \
     dnf group install -y --setopt=strict=0 "c-development" && \
