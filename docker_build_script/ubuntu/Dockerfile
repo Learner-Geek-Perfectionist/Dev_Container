@@ -56,6 +56,7 @@ RUN apt update && apt install -y \
     unminimize \
     man-db \
     jq \
+    tshark \
     && apt clean && rm -rf /var/lib/apt/lists/*
 
 
