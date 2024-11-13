@@ -57,6 +57,7 @@ RUN apt update && apt install -y \
     man-db \
     jq \
     tshark \
+    eza \
     && apt clean && rm -rf /var/lib/apt/lists/*
 
 
