@@ -58,6 +58,7 @@ RUN apt update && apt install -y \
     jq \
     tshark \
     eza \
+    hyperfine \
     && apt clean && rm -rf /var/lib/apt/lists/*
 
 
