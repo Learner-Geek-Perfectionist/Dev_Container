@@ -55,7 +55,7 @@ RUN dnf -y update && \
     jq \
     eza \
     hyperfine \
-    zinit module build \
+    autoconf \
     openssl && \
     dnf install -y --setopt=tsflags= coreutils coreutils-common man-pages man-db && \
     dnf group install -y --setopt=strict=0 "c-development" && \
