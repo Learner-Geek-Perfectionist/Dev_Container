@@ -1,9 +1,14 @@
 # 基础镜像
 FROM fedora:latest
-
 LABEL key="1.0"
 
+# 为了避免交互式
+ENV AUTO_RUN="true"
 
+
+RUN dnf update -y && dnf install -y curl
+
+# 拷贝 init.sh
 COPY ./init.sh /tmp/
 # 设置执行权限
 RUN chmod +x /tmp/init.sh

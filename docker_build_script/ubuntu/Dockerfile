@@ -6,6 +6,8 @@ ENV AUTO_RUN="true"
 
 # 设置标签
 LABEL key="1.0"
+
+
 RUN apt update -y && apt install -y curl
 
 # 拷贝 init.sh
@@ -14,6 +16,3 @@ COPY ./init.sh /tmp/
 RUN chmod +x /tmp/init.sh
 
 RUN /tmp/init.sh
-
-# 设置默认的shell为zsh
-SHELL ["/bin/zsh", "-c"]
