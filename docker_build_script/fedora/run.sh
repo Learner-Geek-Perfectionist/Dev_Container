@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # 删除同名的容器
 echo "Stop and remove Docker container..."
 
