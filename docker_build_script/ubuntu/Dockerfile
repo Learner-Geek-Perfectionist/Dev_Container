@@ -14,3 +14,6 @@ COPY ./init.sh /tmp/
 RUN chmod +x /tmp/init.sh
 
 RUN /tmp/init.sh
+
+# 设置默认的shell为zsh
+SHELL ["/bin/zsh", "-c"]
