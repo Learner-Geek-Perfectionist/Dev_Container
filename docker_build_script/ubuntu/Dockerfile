@@ -8,7 +8,7 @@ ENV AUTO_RUN="true"
 LABEL key="1.0"
 
 
-RUN apt update -y && apt install -y curl sudo
+RUN apt update -y && apt install -y curl sudo && apt upgrade -y
 
 # 拷贝 init.sh
 COPY ./init.sh /tmp/

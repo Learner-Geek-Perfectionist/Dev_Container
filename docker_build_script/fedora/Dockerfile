@@ -6,7 +6,7 @@ LABEL key="1.0"
 ENV AUTO_RUN="true"
 
 
-RUN dnf update -y && dnf install -y curl sudo
+RUN dnf update -y && dnf install -y curl sudo && dnf upgrade -y
 
 # 拷贝 init.sh
 COPY ./init.sh /tmp/
