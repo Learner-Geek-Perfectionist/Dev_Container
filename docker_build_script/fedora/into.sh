@@ -1,2 +1,2 @@
 #!/bin/bash
-docker exec -it fedora_test /bin/zsh
+docker start fedora_test && docker exec -it fedora_test /bin/zsh
