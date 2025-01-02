@@ -15,7 +15,7 @@ export PROJECT_DIR=$(dirname $(dirname $(pwd)))
 # chmod +x $PARENT_DIR/docker_build_script/init.sh
 
 # 运行容器，并将项目 project 目录映射到容器中的 ~/project，并赋予读写权限
-docker run -it \
+docker run \
   --name fedora_test \
   --net=host \
   -v "${PROJECT_DIR}/project":/root/project \
