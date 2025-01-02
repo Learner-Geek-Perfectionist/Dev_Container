@@ -1,3 +1,7 @@
+```shell
+ git clone --depth 1 git@github.com:Learner-Geek-Perfectionist/Dev_Container.git
+```
+
 # Container Development Environment
 # 删除所有 Docker 相关的内容
 
