@@ -20,3 +20,4 @@ docker run -it \
   --net=host \
   -v "${PROJECT_DIR}/project":/root/project \
   fedora \
+  /bin/zsh
