@@ -1,5 +1,5 @@
 ```shell
- git clone --depth 1 git@github.com:Learner-Geek-Perfectionist/Dev_Container.git
+ git clone --depth 1 https://github.com/Learner-Geek-Perfectionist/Dev_Container.git
 ```
 
 # Container Development Environment
