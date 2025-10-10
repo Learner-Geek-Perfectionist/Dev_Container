@@ -1,6 +1,6 @@
 # 使用 Ubuntu 最新的 LTS 版本作为基础镜像
 # FROM ubuntu:latest
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 ENV TERM=xterm-256color
 # 为了避免交互式
 ENV AUTO_RUN="true"
