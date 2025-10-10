@@ -1,6 +1,6 @@
 # 使用 Ubuntu 最新的 LTS 版本作为基础镜像
-FROM ubuntu:latest
-
+# FROM ubuntu:latest
+FROM ubuntu:18.04
 ENV TERM=xterm-256color
 # 为了避免交互式
 ENV AUTO_RUN="true"
@@ -8,7 +8,7 @@ ENV AUTO_RUN="true"
 # 设置标签
 LABEL key="1.0"
 
-RUN apt update && apt upgrade -y && apt install -y curl sudo
+RUN apt update && apt upgrade -y && apt install -y curl sudo lsb-release wget software-properties-common gnupg
 
 # 拷贝 init.sh
 COPY ./init.sh /tmp/
