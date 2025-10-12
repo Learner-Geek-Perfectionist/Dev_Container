@@ -8,7 +8,7 @@ ENV AUTO_RUN="true"
 # 设置标签
 LABEL key="1.0"
 
-RUN apt update && apt upgrade -y && apt install -y curl sudo lsb-release wget software-properties-common gnupg
+RUN apt update && apt upgrade -y && apt install -y curl sudo 
 
 # 拷贝 init.sh
 COPY ./init.sh /tmp/
