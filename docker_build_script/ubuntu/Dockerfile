@@ -4,8 +4,6 @@ FROM ubuntu:20.04
 ENV TERM=xterm-256color
 # 为了避免交互式
 ENV AUTO_RUN="true"
-ENV DEBIAN_FRONTEND=noninteractive TZ=Asia/Shanghai
-
 # 设置标签
 LABEL key="1.0"
 
